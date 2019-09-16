@@ -9,6 +9,7 @@ import java.util.UUID;
 import me.zombie_striker.landclaiming.claimedobjects.ClaimedBlock;
 import me.zombie_striker.landclaiming.claimedobjects.ClaimedLand;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -54,7 +55,7 @@ public class LandClaimer implements Listener {
 				if (plugin.getLockedBlock(e.getClickedBlock().getLocation()) != null) {
 					e.setCancelled(true);
 					lockingMode.remove(e.getPlayer().getUniqueId());
-					e.getPlayer().sendMessage(plugin.PREFIX + plugin.getMessage(plugin.ALREADYLOCKBLOCK));
+					e.getPlayer().sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.PREFIX + plugin.getMessage(plugin.ALREADYLOCKBLOCK)));
 					return;
 				} else {
 					ClaimedBlock cb = new ClaimedBlock(e.getClickedBlock().getWorld(),
@@ -75,12 +76,12 @@ public class LandClaimer implements Listener {
 						plugin.claimedBlock.add(cb2);
 					}
 					lockingMode.remove(e.getPlayer().getUniqueId());
-					e.getPlayer().sendMessage(plugin.PREFIX + plugin.getMessage(plugin.LOCKBLOCK));
+					e.getPlayer().sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.PREFIX + plugin.getMessage(plugin.LOCKBLOCK)));
 					e.setCancelled(true);
 					return;
 				}
 			} else {
-				e.getPlayer().sendMessage(plugin.PREFIX + plugin.getMessage(plugin.PERMISSION));
+				e.getPlayer().sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.PREFIX + plugin.getMessage(plugin.PERMISSION)));
 				lockingMode.remove(e.getPlayer().getUniqueId());
 			}
 		}
@@ -90,7 +91,7 @@ public class LandClaimer implements Listener {
 				if (plugin.getLockedBlock(e.getClickedBlock().getLocation()) == null) {
 					e.setCancelled(true);
 					lockingMode.remove(e.getPlayer().getUniqueId());
-					e.getPlayer().sendMessage(plugin.PREFIX + plugin.getMessage(plugin.NOTLOCKEDBLOCK));
+					e.getPlayer().sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.PREFIX + plugin.getMessage(plugin.NOTLOCKEDBLOCK)));
 					return;
 				} else if (plugin.getLockedBlock(e.getClickedBlock().getLocation()).getOwner()
 						.equals(e.getPlayer().getUniqueId()) || e.getPlayer().isOp()
@@ -108,12 +109,12 @@ public class LandClaimer implements Listener {
 						plugin.claimedBlock.remove(cb2);
 					}
 					lockingMode.remove(e.getPlayer().getUniqueId());
-					e.getPlayer().sendMessage(plugin.PREFIX + plugin.getMessage(plugin.UNLOCKBLOCK));
+					e.getPlayer().sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.PREFIX + plugin.getMessage(plugin.UNLOCKBLOCK)));
 					e.setCancelled(true);
 					return;
 				}
 			} else {
-				e.getPlayer().sendMessage(plugin.PREFIX + plugin.getMessage(plugin.PERMISSION));
+				e.getPlayer().sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.PREFIX + plugin.getMessage(plugin.PERMISSION)));
 				lockingMode.remove(e.getPlayer().getUniqueId());
 			}
 		}
@@ -125,7 +126,7 @@ public class LandClaimer implements Listener {
 					e.setCancelled(true);
 					lockingMode.remove(e.getPlayer().getUniqueId());
 					lockingPlayer.remove(e.getPlayer().getUniqueId());
-					e.getPlayer().sendMessage(plugin.PREFIX + plugin.getMessage(plugin.NOTLOCKEDBLOCK));
+					e.getPlayer().sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.PREFIX + plugin.getMessage(plugin.NOTLOCKEDBLOCK)));
 					return;
 				} else if (plugin.getLockedBlock(e.getClickedBlock().getLocation()).getOwner()
 						.equals(e.getPlayer().getUniqueId()) || e.getPlayer().isOp()
@@ -144,12 +145,12 @@ public class LandClaimer implements Listener {
 					}
 					lockingMode.remove(e.getPlayer().getUniqueId());
 					lockingPlayer.remove(e.getPlayer().getUniqueId());
-					e.getPlayer().sendMessage(plugin.PREFIX + plugin.getMessage(plugin.ADDGUEST));
+					e.getPlayer().sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.PREFIX + plugin.getMessage(plugin.ADDGUEST)));
 					e.setCancelled(true);
 					return;
 				}
 			} else {
-				e.getPlayer().sendMessage(plugin.PREFIX + plugin.getMessage(plugin.PERMISSION));
+				e.getPlayer().sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.PREFIX + plugin.getMessage(plugin.PERMISSION)));
 				lockingMode.remove(e.getPlayer().getUniqueId());
 			}
 		}
@@ -161,7 +162,7 @@ public class LandClaimer implements Listener {
 					e.setCancelled(true);
 					lockingMode.remove(e.getPlayer().getUniqueId());
 					lockingPlayer.remove(e.getPlayer().getUniqueId());
-					e.getPlayer().sendMessage(plugin.PREFIX + plugin.getMessage(plugin.NOTLOCKEDBLOCK));
+					e.getPlayer().sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.PREFIX + plugin.getMessage(plugin.NOTLOCKEDBLOCK)));
 					return;
 				} else if (plugin.getLockedBlock(e.getClickedBlock().getLocation()).getOwner()
 						.equals(e.getPlayer().getUniqueId()) || e.getPlayer().isOp()
@@ -180,12 +181,12 @@ public class LandClaimer implements Listener {
 					}
 					lockingMode.remove(e.getPlayer().getUniqueId());
 					lockingPlayer.remove(e.getPlayer().getUniqueId());
-					e.getPlayer().sendMessage(plugin.PREFIX + plugin.getMessage(plugin.REMOVEGUEST));
+					e.getPlayer().sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.PREFIX + plugin.getMessage(plugin.REMOVEGUEST)));
 					e.setCancelled(true);
 					return;
 				}
 			} else {
-				e.getPlayer().sendMessage(plugin.PREFIX + plugin.getMessage(plugin.PERMISSION));
+				e.getPlayer().sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.PREFIX + plugin.getMessage(plugin.PERMISSION)));
 				lockingMode.remove(e.getPlayer().getUniqueId());
 			}
 		}
@@ -220,9 +221,9 @@ public class LandClaimer implements Listener {
 					if (plugin.getTotalClaimedBlocks(e.getPlayer().getUniqueId())
 							+ ((xmax - xmin) * (zmax - zmin)) > lands) {
 						e.getPlayer()
-								.sendMessage(plugin.PREFIX + (plugin.getMessage(plugin.MAXCLAIM)
-										.replace("%maxblocks%", lands + "").replace("cblocks",
-												plugin.getTotalClaimedBlocks(e.getPlayer().getUniqueId()) + "")));
+								.sendMessage(ChatColor.translateAlternateColorCodes('&',plugin.PREFIX + (plugin.getMessage(plugin.MAXCLAIM)
+										.replace("%maxblocks%", lands + "").replace("%cblocks%",
+												plugin.getTotalClaimedBlocks(e.getPlayer().getUniqueId()) + ""))));
 						claimingMode.remove(e.getPlayer().getUniqueId());
 						firstBlock.remove(e.getPlayer().getUniqueId());
 						return;
@@ -232,12 +233,12 @@ public class LandClaimer implements Listener {
 						ClaimedLand cl = new ClaimedLand(e.getClickedBlock().getWorld(), xmin, zmin, xmax, zmax,
 								e.getPlayer().getUniqueId(), claimingMode.get(e.getPlayer().getUniqueId()));
 						plugin.claimedLand.add(cl);
-						e.getPlayer().sendMessage(plugin.PREFIX + plugin.getMessage(plugin.CLAIMEDLAND)
-								.replace("%name%", claimingMode.get(e.getPlayer().getUniqueId())));
+						e.getPlayer().sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.PREFIX + plugin.getMessage(plugin.CLAIMEDLAND)
+								.replace("%name%", claimingMode.get(e.getPlayer().getUniqueId()))));
 						firstBlock.remove(e.getPlayer().getUniqueId());
 						claimingMode.remove(e.getPlayer().getUniqueId());
 					} else {
-						e.getPlayer().sendMessage(plugin.getMessage(plugin.NOTCLAIM));
+						e.getPlayer().sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getMessage(plugin.NOTCLAIM)));
 						firstBlock.remove(e.getPlayer().getUniqueId());
 						claimingMode.remove(e.getPlayer().getUniqueId());
 						return;
@@ -247,15 +248,15 @@ public class LandClaimer implements Listener {
 						return;
 					firstBlock.put(e.getPlayer().getUniqueId(), e.getClickedBlock().getLocation());
 					e.getPlayer()
-							.sendMessage(plugin.PREFIX + (plugin.getMessage(plugin.CLAIMCORNER)
+							.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.PREFIX + (plugin.getMessage(plugin.CLAIMCORNER)
 									.replace("%x%", e.getClickedBlock().getLocation().getBlockX() + "")
-									.replace("%z%", e.getClickedBlock().getLocation().getBlockZ() + "")));
+									.replace("%z%", e.getClickedBlock().getLocation().getBlockZ() + ""))));
 					e.getPlayer()
-							.sendMessage(plugin.PREFIX + " Click the other corner of the region you want to claim.");
+							.sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.PREFIX + " Click the other corner of the region you want to claim."));
 				}
 
 			} else {
-				e.getPlayer().sendMessage(plugin.PREFIX + plugin.getMessage(plugin.PERMISSION));
+				e.getPlayer().sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.PREFIX + plugin.getMessage(plugin.PERMISSION)));
 				claimingMode.remove(e.getPlayer().getUniqueId());
 			}
 		}

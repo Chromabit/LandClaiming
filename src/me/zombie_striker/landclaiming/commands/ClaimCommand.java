@@ -31,6 +31,10 @@ public class ClaimCommand implements CommandExecutor, TabCompleter {
 			Player p = (Player) sender;
 			if (args.length >= 1) {
 				if (args[0].equalsIgnoreCase("info")) {
+					if (!p.hasPermission(plugin.PERM_ADMIN)) {
+						p.sendMessage(plugin.PREFIX + plugin.getMessage(plugin.PERMISSION));
+						return true;
+					}
 					if (args.length >= 2) {
 						for (ClaimedLand cl : plugin.claimedLand) {
 							if (cl.getName().equalsIgnoreCase(args[1])) {

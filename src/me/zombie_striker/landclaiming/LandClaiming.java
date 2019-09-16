@@ -14,6 +14,7 @@ import me.zombie_striker.landclaiming.commands.LockCommand;
 import me.zombie_striker.landclaiming.commands.UnclaimCommand;
 
 import org.bukkit.*;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.permissions.Permission;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -61,65 +62,26 @@ public class LandClaiming extends JavaPlugin {
 
 	public HashMap<String, Integer> maxLands = new HashMap<>();
 
-	private boolean save = false;
-
-	public Object a(String path, Object o) {
-		if (getConfig().contains(path))
-			return getConfig().get(path);
-		getConfig().set(path, o);
-		save = true;
-		return o;
-	}
 
 	@SuppressWarnings("unchecked")
 	public void onEnable() {
-		a("landclaiming.message.permission", "&4 You do not have permission to complete this action.");
+		saveDefaultConfig();
+		FileConfiguration config = getConfig();
 
-		a("landclaiming.message.interactblock",
-				"&4 You cannot interact with blocks in this region. Land claimed by %owner%.");
-		a("landclaiming.message.claimland", "&c You have claimed this land as %name%.");
+		ENABLEINTERACTABLEBLOCKS = config.getBoolean(iwc);
+		interactAbleMaterials = config.getStringList(iwce);
 
-		a("landclaiming.message.lockchest", "&c You have locked this block");
-		a("landclaiming.message.unlockchest", "&c You have unlocked this block");
-		a("landclaiming.message.alreadylockchest", "&c This block has already been claimed");
-		a("landclaiming.message.lockedchest", "&c This block is locked");
-		a("landclaiming.message.notlockedchest", "&c This block is not locked");
-		a("landclaiming.message.claimedchest", "&c This block is claimed");
-
-		a("landclaiming.message.addguest", "&c You have added %player%");
-		a("landclaiming.message.removeguest", "&c You have removed %player%");
-
-		a("landclaiming.message.unclaimland", "&c You have unlcaimed %name%");
-		a("landclaiming.message.claimcorner", "&c You claimed this corner at %x% and %z%");
-		a("landclaiming.message.notclaim",
-				"&c You cannot claimed this land. There is already land claimed in this region.");
-		a(MAXCLAIM,
-				"&c You have claimed too many blocks! The max amount of blocks are %maxblocks%, and you currently have claimed &cblocks& blocks.");
-		a(MAXCLAIMINT + ".group.Default", 5000);
-		a(MAXCLAIMINT + ".group.Member", 10000);
-		a(MAXCLAIMINT + ".group.op", -1);
-		a(MAXCLAIMINT2, 500);
-		
-		ENABLEINTERACTABLEBLOCKS = (boolean) a(iwc,false);
-		
-		interactAbleMaterials = (List<String>) a(iwce,interactAbleMaterials);
-		
-		
-		
-		if (save)
-			saveConfig();
-
-		for (String g : getConfig().getConfigurationSection(MAXCLAIMINT + ".group").getKeys(false)) {
-			maxLands.put(g, getConfig().getInt(MAXCLAIMINT + ".group." + g));
+		for (String g : config.getConfigurationSection(MAXCLAIMINT + ".group").getKeys(false)) {
+			maxLands.put("group." + g, config.getInt(MAXCLAIMINT + ".group." + g));
 		}
 
-		if (getConfig().contains("landclaiming.claimed"))
-			for (String s : getConfig().getStringList("landclaiming.claimed")) {
+		if (config.contains("landclaiming.claimed"))
+			for (String s : config.getStringList("landclaiming.claimed")) {
 				ClaimedLand cl = new ClaimedLand(s);
 				claimedLand.add(cl);
 			}
-		if (getConfig().contains("landclaiming.locked"))
-			for (String s : getConfig().getStringList("landclaiming.locked")) {
+		if (config.contains("landclaiming.locked"))
+			for (String s : config.getStringList("landclaiming.locked")) {
 				ClaimedBlock cl = new ClaimedBlock(s);
 				claimedBlock.add(cl);
 			}
@@ -140,12 +102,6 @@ public class LandClaiming extends JavaPlugin {
 		
 		this.getCommand("claim").setTabCompleter(cc);
 		this.getCommand("unclaim").setTabCompleter(uc);
-
-
-		if (Bukkit.getPluginManager().getPlugin("PluginConstructorAPI") == null)
-			new DependencyDownloader(this, 276723);
-
-		new Updater(this, 98632, true);
 	}
 
 	@Override
@@ -221,5 +177,14 @@ public class LandClaiming extends JavaPlugin {
 				return cb;
 		}
 		return null;
+	}
+
+	public boolean isNearLockedBlock(Location l) {
+		for (ClaimedBlock cb : this.claimedBlock) {
+			if (cb.getLocation().distance(l) < 5) {
+				return true;
+			}
+		}
+		return false;
 	}
 }
