@@ -214,7 +214,7 @@ public class LandClaimer implements Listener {
 							if (ent.getValue() < 0)
 								lands = Integer.MAX_VALUE;
 							else
-								lands = ent.getValue();
+								lands = Math.max(ent.getValue(), lands);
 						}
 					}
 
