@@ -1,5 +1,5 @@
 main: me.zombie_striker.landclaiming.LandClaiming
-version: 1.4.11-RF0
+version: 1.4.11-RF1
 name: LandClaiming-RF
 api-version: 1.14
 commands:

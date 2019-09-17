@@ -9,6 +9,7 @@ import java.util.UUID;
 import me.zombie_striker.landclaiming.claimedobjects.ClaimedBlock;
 import me.zombie_striker.landclaiming.claimedobjects.ClaimedLand;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -78,6 +79,7 @@ public class LandClaimer implements Listener {
 					lockingMode.remove(e.getPlayer().getUniqueId());
 					e.getPlayer().sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.PREFIX + plugin.getMessage(plugin.LOCKBLOCK)));
 					e.setCancelled(true);
+					saveAsync();
 					return;
 				}
 			} else {
@@ -111,6 +113,7 @@ public class LandClaimer implements Listener {
 					lockingMode.remove(e.getPlayer().getUniqueId());
 					e.getPlayer().sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.PREFIX + plugin.getMessage(plugin.UNLOCKBLOCK)));
 					e.setCancelled(true);
+					saveAsync();
 					return;
 				}
 			} else {
@@ -147,6 +150,7 @@ public class LandClaimer implements Listener {
 					lockingPlayer.remove(e.getPlayer().getUniqueId());
 					e.getPlayer().sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.PREFIX + plugin.getMessage(plugin.ADDGUEST)));
 					e.setCancelled(true);
+					saveAsync();
 					return;
 				}
 			} else {
@@ -183,6 +187,7 @@ public class LandClaimer implements Listener {
 					lockingPlayer.remove(e.getPlayer().getUniqueId());
 					e.getPlayer().sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.PREFIX + plugin.getMessage(plugin.REMOVEGUEST)));
 					e.setCancelled(true);
+					saveAsync();
 					return;
 				}
 			} else {
@@ -237,6 +242,7 @@ public class LandClaimer implements Listener {
 								.replace("%name%", claimingMode.get(e.getPlayer().getUniqueId()))));
 						firstBlock.remove(e.getPlayer().getUniqueId());
 						claimingMode.remove(e.getPlayer().getUniqueId());
+						saveAsync();
 					} else {
 						e.getPlayer().sendMessage(ChatColor.translateAlternateColorCodes('&', plugin.getMessage(plugin.NOTCLAIM)));
 						firstBlock.remove(e.getPlayer().getUniqueId());
@@ -260,5 +266,11 @@ public class LandClaimer implements Listener {
 				claimingMode.remove(e.getPlayer().getUniqueId());
 			}
 		}
+	}
+
+	private void saveAsync() {
+		Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+			plugin.save();
+		});
 	}
 }

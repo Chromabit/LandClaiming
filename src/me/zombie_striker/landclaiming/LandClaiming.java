@@ -1,11 +1,6 @@
 package me.zombie_striker.landclaiming;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-
-import java.util.UUID;
+import java.util.*;
 
 import me.zombie_striker.landclaiming.claimedobjects.ClaimedBlock;
 import me.zombie_striker.landclaiming.claimedobjects.ClaimedLand;
@@ -20,8 +15,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class LandClaiming extends JavaPlugin {
 
-	public List<ClaimedLand> claimedLand = new ArrayList<ClaimedLand>();
-	public List<ClaimedBlock> claimedBlock = new ArrayList<ClaimedBlock>();
+	public List<ClaimedLand> claimedLand = Collections.synchronizedList(new ArrayList<>());
+	public List<ClaimedBlock> claimedBlock = Collections.synchronizedList(new ArrayList<>());
 
 	public final String INTERACTEVENT = "landclaiming.message.interactblock";
 	public final String CLAIMEDLAND = "landclaiming.message.claimland";
@@ -111,14 +106,18 @@ public class LandClaiming extends JavaPlugin {
 
 	public void save() {
 		List<String> lips = new ArrayList<>();
-		for (ClaimedLand cl : this.claimedLand) {
-			lips.add(cl.serialize());
+		synchronized (this.claimedLand) {
+			for (ClaimedLand cl : this.claimedLand) {
+				lips.add(cl.serialize());
+			}
 		}
 		getConfig().set("landclaiming.claimed", lips);
 
 		List<String> lips2 = new ArrayList<>();
-		for (ClaimedBlock cl2 : this.claimedBlock) {
-			lips2.add(cl2.serialize());
+		synchronized (this.claimedBlock) {
+			for (ClaimedBlock cl2 : this.claimedBlock) {
+				lips2.add(cl2.serialize());
+			}
 		}
 		getConfig().set("landclaiming.locked", lips2);
 		saveConfig();
@@ -181,7 +180,7 @@ public class LandClaiming extends JavaPlugin {
 
 	public boolean isNearLockedBlock(Location l) {
 		for (ClaimedBlock cb : this.claimedBlock) {
-			if (cb.getLocation().distance(l) < 5) {
+			if (cb.getLocation().getWorld() == l.getWorld() && cb.getLocation().distance(l) < 5) {
 				return true;
 			}
 		}
